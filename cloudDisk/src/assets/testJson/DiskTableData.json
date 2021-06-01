@@ -1,0 +1,67 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "date": "2021-06-01",
+      "type": "file",
+      "name": "file1",
+      "info": "This is file1"
+    }, {
+      "id": "2",
+      "date": "2021-06-01",
+      "type": "file",
+      "name": "file2",
+      "info": "This is file2"
+    }, {
+      "id": "3",
+      "date": "2021-06-01",
+      "type": "file",
+      "name": "file3",
+      "info": "This is file3"
+    }, {
+      "id": "4",
+      "date": "2021-06-01",
+      "type": "folder",
+      "name": "folder1",
+      "info": "This is folder1",
+      "children": [{
+        "id": "5",
+        "date": "2021-06-01",
+        "type": "file",
+        "name": "file4",
+        "info": "This is file4"
+      }, {
+        "id": "6",
+        "date": "2021-06-01",
+        "type": "file",
+        "name": "file5",
+        "info": "This is file5"
+      }]
+    }, {
+         "id": "7",
+         "date": "2021-06-01",
+         "type": "file",
+         "name": "file6",
+         "info": "This is file6"
+       }, {
+         "id": "8",
+         "date": "2021-06-01",
+         "type": "file",
+         "name": "file7",
+         "info": "This is file7"
+       },
+       {
+         "id": "9",
+         "date": "2021-06-01",
+         "type": "file",
+         "name": "file8",
+         "info": "This is file8"
+       }, {
+         "id": "10",
+         "date": "2021-06-01",
+         "type": "file",
+         "name": "file9",
+         "info": "This is file9"
+       }
+  ]
+}
