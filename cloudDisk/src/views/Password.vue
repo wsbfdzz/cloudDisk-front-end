@@ -1,29 +1,24 @@
 <template>
 	<div>
-		<div class="showpassd">
-			<p>当前密码为:{{password}}</p>
+		<div class="showpassd" align="center">
+      <el-card>
+        <p>当前密码为:{{password}}</p>
+      </el-card>
 		</div>
-		<div class="changePassd">
-			<form name="changepassdForm">
-				<table align="center">
-					<caption>修改密码</caption>
-					<tr>
-						<td>新密码:</td>
-						<td>
-              <input type="password" name="change"/>
-<!--							<input type="password" name="change"></input>-->
-						</td>
-					</tr>
-					<tr>
-						<td colspan="1" style="text-align: center; padding: 5px; margin: auto">
-							<form id="form1" name="myForm" method="post" action="www.baidu.com" target="_blank">
-								<input type="submit" value="提交" />
-								<input type="reset" value="重置" />
-							</form>
-						</td>
-					</tr>
-				</table>
-			</form>
+
+		<div class="changePassd" align="center">
+      <el-card>
+        <el-form name="changepassdForm">
+          <h1>修改密码</h1>
+          <el-form-item label="新密码">
+            <el-input type="password"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">修改</el-button>
+            <el-button>取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
 		</div>
 	</div>
 </template>
@@ -36,11 +31,18 @@
 				password: 123141241,
 			}
 		},
+    methods: {
+      onSubmit(){
+        console.log("submit")
+      }
+    },
 	}
 </script>
 
 <style scoped>
-.showpassd{
-  text-align: center;
+.el-card{
+  width: 80%;
+  height: auto;
+  margin: 20px;
 }
 </style>

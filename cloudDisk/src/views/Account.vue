@@ -11,8 +11,8 @@
 		<div class="edit" align="center">
       <el-card>
 <!--        <el-form name="myForm" ref="form" :model="form" label-width="80px">-->
-        <el-form name="myForm" label-width="80px">
-<!--            <caption>修改用户名</caption>-->
+        <el-form name="myForm">
+            <h1>修改用户名</h1>
             <el-form-item label="新用户名">
 <!--              <el-input v-model="form.name"></el-input>-->
               <el-input></el-input>
@@ -39,7 +39,8 @@
 		name: "Account",
 		data() {
 			return {
-				headerUrl: require('../assets/bg.jpg'),
+				uid: 12345,
+        username: "zxypro"
 			}
 		},
     methods: {

@@ -15,8 +15,9 @@
 
 			<!--        </el-image>-->
 			<div align="center">
-				<img class="head-portrait round-border" src="https://avatars2.githubusercontent.com/u/1176014?v=3&s=460"
-					alt="My Picture">
+        <el-avatar src="https://avatars2.githubusercontent.com/u/1176014?v=3&s=460" class="head-portrait" shape="square" :size="200" :fit="fill"></el-avatar>
+<!--				<img class="head-portrait round-border" src="https://avatars2.githubusercontent.com/u/1176014?v=3&s=460"-->
+<!--					alt="My Picture">-->
 			</div>
 		</el-col>
 	</el-row>
@@ -60,46 +61,8 @@
 		height: 100%;
 	}
 
-	.headCol {
-		margin-top: 10px;
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		/*background-color: #2c3e50;*/
-	}
-
-	#headimg {
-		margin-top: 10px;
-	}
-
-	.headContainer {
-		/*text-align: center;*/
-		/*top: 10px;*/
-		/*border-radius: 30px;*/
-		position: relative;
-		top: 30px;
-		/*width:30%;*/
-		/*height:30%;*/
-	}
-
-	.col-sm-6 {
-		overflow: hidden;
-		float: left;
-	}
-
-	.round-border {
-		border-color: green;
-		border-width: 0px;
-		border-style: solid;
-		border-radius: 50%;
-	}
-
 	.head-portrait {
-		width: 80%;
-		padding: 20px;
-		margin: 20px;
-		float: left;
+    margin-top: 40px;
 	}
 
 	.el-main {

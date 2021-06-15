@@ -31,6 +31,7 @@ export default new Router({
 			path: '/center',
 			component: Center,
 			name: 'center',
+			redirect: '/account',
 			children:[
 				{
 					path: '/account',
