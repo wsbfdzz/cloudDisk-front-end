@@ -28,7 +28,7 @@
     <el-table :data="history">
       <el-table-column prop="date" label="日期">
       </el-table-column>
-      <el-table-column prop="file" label="上传文件">
+      <el-table-column prop="name" label="上传文件">
       </el-table-column>
       <el-table-column prop="size" label="文件大小">
       </el-table-column>
@@ -36,9 +36,9 @@
 
   </el-card>
 </template>
-
 <script>
 
+import axios from "axios";
 export default {
   name: "History",
   data(){
@@ -57,6 +57,18 @@ export default {
         size: '26MB'
       }],
     }
+  },
+  mounted() {
+    axios
+        .post('/getFileList')
+        .then(response => (
+            window.alert('修改成功!'),
+            this.history=response.data.msg
+        ))
+        .catch(function (error) { // 请求失败处理
+          window.alert('读取失败!');
+          console.log(error);
+        });
   },
 }
 </script>
