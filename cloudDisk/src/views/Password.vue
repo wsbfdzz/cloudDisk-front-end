@@ -58,7 +58,6 @@ import axios from "axios";
       axios
           .get('/checklogin')
           .then(response => (
-              window.alert('修改成功!'),
               this.password = response.data.msg.passwd
           ))
           .catch(function (error) { // 请求失败处理

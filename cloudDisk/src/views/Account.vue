@@ -69,7 +69,6 @@
       axios
           .get('/checklogin')
           .then(response => (
-              window.alert('修改成功!'),
               this.uid = response.data.msg.uuid,
               this.username = response.data.msg.usrName
           ))

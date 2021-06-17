@@ -48,7 +48,6 @@
 	import AccountNavMenu from "../components/AccountNavMenu.vue"
   import Vue from "vue";
   import axios from "axios";
-  // import axios from "axios";
   new Vue({
   })
 	export default {

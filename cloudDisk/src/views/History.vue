@@ -45,15 +45,15 @@ export default {
     return {
       history:[{
         date: '2020-6-26',
-        file: '1.doxc',
+        name: '1.doxc',
         size: '26MB'
       },{
         date: '2020-7-16',
-        file: '2.doxc',
+        name: '2.doxc',
         size: '36MB'
       },{
         date: '2021-2-26',
-        file: '3.doxc',
+        name: '3.doxc',
         size: '26MB'
       }],
     }
@@ -62,7 +62,6 @@ export default {
     axios
         .post('/getFileList')
         .then(response => (
-            window.alert('修改成功!'),
             this.history=response.data.msg
         ))
         .catch(function (error) { // 请求失败处理
