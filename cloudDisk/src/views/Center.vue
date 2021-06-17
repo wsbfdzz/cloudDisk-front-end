@@ -17,12 +17,22 @@
         <!--        <el-image :src="require('../assets/bg.jpg')" fit="scale-down" id="headimg">-->
 
         <!--        </el-image>-->
-        <div align="center" v-if="imageUrl !== ''">
-          <el-avatar id="head" src="https://avatars2.githubusercontent.com/u/1176014?v=3&s=460" class="head-portrait" shape="square" :size="200"></el-avatar>
-          <!--				<img class="head-portrait round-border" src="https://avatars2.githubusercontent.com/u/1176014?v=3&s=460"-->
-          <!--					alt="My Picture">-->
-        </div>
-        <div align="center" v-else>
+<!--        <div align="center" v-if="imageUrl !== ''">-->
+<!--          <el-avatar id="head" v-bind:src="imageUrl" class="head-portrait" shape="square" :size="200"></el-avatar>-->
+<!--          &lt;!&ndash;				<img class="head-portrait round-border" src="https://avatars2.githubusercontent.com/u/1176014?v=3&s=460"&ndash;&gt;-->
+<!--          &lt;!&ndash;					alt="My Picture">&ndash;&gt;-->
+<!--          <el-upload-->
+<!--              class="avatar-uploader"-->
+<!--              action="#"-->
+<!--              :show-file-list="false"-->
+<!--              :on-success="handleAvatarSuccess"-->
+<!--              :before-upload="beforeAvatarUpload"-->
+<!--          >-->
+<!--            <img v-if="imageUrl" :src="imageUrl" class="avatar">-->
+<!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+<!--          </el-upload>-->
+<!--        </div>-->
+        <div align="center">
           <el-upload
               class="avatar-uploader"
               action="#"
@@ -59,7 +69,8 @@
 			return {
 				headerUrl: require('../assets/bg.jpg'),
         imageUrl: '',
-        stat: null
+        stat: null,
+        username: null
 			}
 		},
 		methods: {
@@ -107,12 +118,23 @@
       axios
           .get('/checklogin')
           .then(response => (
-              this.stat = response.data.status
+              this.stat = response.data.status,
+                  this.username = response.data.msg.usrName
           ))
           .catch(function (error) {
             window.alert('读取失败!');
             console.log(error);
           });
+      axios.post('/avatar',{
+        user: this.username
+      }).then(response => {
+        return 'data:image/png;base64,' + btoa(new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+      }).then(res => {
+        this.imageUrl = res;
+      }).catch(function (error) {
+        window.alert('读取头像失败!');
+        console.log(error);
+      });
     }
   }
 </script>
