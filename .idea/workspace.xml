@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0253bf23-d5b8-48fb-aeda-fa371592e2dc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/cloudDisk/src/chartjs/walden.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/cloudDisk-front-end.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cloudDisk-front-end.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloudDisk/src/views/Center.vue" beforeDir="false" afterPath="$PROJECT_DIR$/cloudDisk/src/views/Center.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloudDisk/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/cloudDisk/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloudDisk/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/cloudDisk/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloudDisk/src/components/InfoAccount.vue" beforeDir="false" afterPath="$PROJECT_DIR$/cloudDisk/src/components/InfoAccount.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloudDisk/src/components/InfoHistory.vue" beforeDir="false" afterPath="$PROJECT_DIR$/cloudDisk/src/components/InfoHistory.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloudDisk/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/cloudDisk/src/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,6 +84,8 @@
       <workItem from="1623432879119" duration="662000" />
       <workItem from="1623487859556" duration="626000" />
       <workItem from="1623691417518" duration="44197000" />
+      <workItem from="1624108036386" duration="8652000" />
+      <workItem from="1624119372844" duration="1781000" />
     </task>
     <servers />
   </component>
