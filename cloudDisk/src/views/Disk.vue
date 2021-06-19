@@ -7,9 +7,6 @@
       <disk-table :table="table"></disk-table>
     </el-col>
   </el-row>
-
-
-
 </template>
 
 <script>

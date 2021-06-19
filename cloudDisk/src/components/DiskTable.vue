@@ -2,29 +2,42 @@
   <el-container>
     <el-card>
       <div slot="header">
-        <el-button round type="primary" >Upload</el-button>
+        <el-button round type="primary" @click="upload">Upload</el-button>
+        <el-dialog :visible.sync="centerDialogVisible" center title="提示" width="auto">
+          <el-upload class="upload-demo" :limit="1" drag action="#" multiple :http-request="uploadFile" :on-remove="cencelUploadFile">
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__tip" slot="tip"></div>
+          </el-upload>
+<!--          <el-input v-model="info" placeholder="请输入内容" style="margin-top: 20px"></el-input>-->
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="cencelUploadFile">取 消</el-button>
+            <el-button type="primary" @click="submitUploadFile">确 定</el-button>
+          </span>
+        </el-dialog>
         <el-button round type="warning" @click="createFolder">New Folder</el-button>
         <el-divider direction="vertical"></el-divider>
-        <el-button type="success" class="right-button" @click="downloadFiles">Download</el-button>
-        <el-button type="danger" class="right-button" @click="deleteFiles">Delete</el-button>
-        <el-button type="warning" class="right-button" @click="renameFile">Rename</el-button>
-        <el-button type="info" class="right-button" @click="moveFile">Move</el-button>
+        <el-button class="right-button" type="success" @click="downloadFiles">Download</el-button>
+        <el-button class="right-button" type="danger" @click="deleteFiles">Delete</el-button>
+        <el-button class="right-button" type="warning" @click="renameFile">Rename</el-button>
+        <el-button class="right-button" type="info" @click="moveFile">Move</el-button>
       </div>
       <div>
-        <el-page-header @back="goBack" :content="folder" title="Back" v-if="enterFolder">
+        <el-page-header v-if="enterFolder" :content="folder" title="Back" @back="goBack">
         </el-page-header>
-        <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange" @select="selectFile"
-                  height="450px" row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+        <el-table :data="tableData" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" height="450px"
+                  row-key="id"
+                  style="width: 100%" @select="selectFile" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50"></el-table-column>
-          <el-table-column prop="name" label="Name" width="150"></el-table-column>
-          <el-table-column prop="type" label="Type" width="150"></el-table-column>
-          <el-table-column prop="date" label="Date" width="150"></el-table-column>
-          <el-table-column prop="info" label="Info"></el-table-column>
+          <el-table-column label="Name" prop="name" width="150"></el-table-column>
+          <el-table-column label="Type" prop="type" width="150"></el-table-column>
+          <el-table-column label="Date" prop="date" width="150"></el-table-column>
+          <el-table-column label="Info" prop="info"></el-table-column>
         </el-table>
       </div>
-<!--      {{tableData}}-->
-<!--      <el-divider></el-divider>-->
-<!--      {{selectData}}-->
+      <!--      {{tableData}}-->
+      <!--      <el-divider></el-divider>-->
+      <!--      {{selectData}}-->
     </el-card>
   </el-container>
 </template>
@@ -32,6 +45,8 @@
 <script>
 import DiskTableData from '../assets/testJson/DiskTableData.json'
 import DiskTableData1 from '../assets/testJson/DiskTableData1.json'
+import axios from "axios";
+
 export default {
   name: "DiskTable",
   data() {
@@ -39,16 +54,19 @@ export default {
       folder: '111',
       enterFolder: false,
       tableData: DiskTableData.data,
-      selectData: []
+      selectData: [],
+      centerDialogVisible: false,
+      fileList: [],
+      info: ''
     }
   },
   props: ['table'],
   watch: {
     table(val, old) {
       console.log(val + ' ' + old)
-      if(val === 'All')
+      if (val === 'All')
         this.tableData = DiskTableData.data
-      else if(val === 'Pic')
+      else if (val === 'Pic')
         this.tableData = DiskTableData1.data
       else
         this.tableData = DiskTableData.data
@@ -62,35 +80,34 @@ export default {
       if (rows) {
         rows.forEach(row => {
           this.$refs.multipleTable.toggleRowSelection(row);
-          this.selectData=rows
+          this.selectData = rows
         });
       } else {
         this.$refs.multipleTable.clearSelection();
-        this.selectData=rows
+        this.selectData = rows
       }
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      this.selectData=val
+      this.selectData = val
     },
     selectFile(val) {
       console.log(val)
-      this.selectData=val
+      this.selectData = val
     },
     deleteFiles() {
       let filesID = []
-      if(this.selectData.length !== 0) {
-        for(let i in this.selectData) {
+      if (this.selectData.length !== 0) {
+        for (let i in this.selectData) {
           filesID.push(this.selectData[i].name)
         }
         this.openBox(filesID, 'Do you want to delete?')
       }
-
     },
     downloadFiles() {
       let filesID = []
-      if(this.selectData.length !== 0) {
-        for(let i in this.selectData) {
+      if (this.selectData.length !== 0) {
+        for (let i in this.selectData) {
           filesID.push(this.selectData[i].name)
         }
         this.openBox(filesID, 'Do you want to download?')
@@ -128,19 +145,19 @@ export default {
     },
     moveFile() {
       let flag = false
-      if(this.selectData.length === 0) {
+      if (this.selectData.length === 0) {
         this.$alert('Please choose one file', 'Warming', {
           confirmButtonText: 'yes'
         });
         return
       } else {
-        for(let i in this.selectData) {
-          if(this.selectData[i].type === 'folder') {
+        for (let i in this.selectData) {
+          if (this.selectData[i].type === 'folder') {
             flag = true
           }
         }
       }
-      if(flag === true) {
+      if (flag === true) {
         this.$alert('Please choose files', 'Warming', {
           confirmButtonText: 'yes'
         });
@@ -148,21 +165,21 @@ export default {
         this.$prompt('Please enter where you want to move', 'Tip', {
           confirmButtonText: 'yes',
           cancelButtonText: 'cancel'
-        }).then(({ value }) => {
+        }).then(({value}) => {
           let flag = false
           let pos = 0
-          for(let i in this.tableData) {
-            if(this.tableData[i].name === value && this.tableData[i].type === 'folder') {
+          for (let i in this.tableData) {
+            if (this.tableData[i].name === value && this.tableData[i].type === 'folder') {
               flag = true
               pos = i
             }
           }
-          if(flag === true) {
+          if (flag === true) {
             this.$message({
               type: 'success',
               message: 'Move to: ' + value
             });
-            for(let i in this.selectData) {
+            for (let i in this.selectData) {
               this.tableData[pos].children.push(this.selectData[i])
             }
           } else {
@@ -180,7 +197,7 @@ export default {
       }
     },
     renameFile() {
-      if(this.selectData.length !== 1) {
+      if (this.selectData.length !== 1) {
         this.$alert('Please choose one file', 'Warming', {
           confirmButtonText: 'yes'
         });
@@ -188,14 +205,14 @@ export default {
         this.$prompt('Please enter a new name', 'Tip', {
           confirmButtonText: 'yes',
           cancelButtonText: 'cancel'
-        }).then(({ value }) => {
+        }).then(({value}) => {
           this.$message({
             type: 'success',
             message: 'New name: ' + value
           });
-          for(let i in this.tableData) {
+          for (let i in this.tableData) {
             console.log(this.tableData[i].name)
-            if(this.tableData[i].name === this.selectData[0].name) {
+            if (this.tableData[i].name === this.selectData[0].name) {
               this.tableData[i].name = value
               this.selectData.name = value
             }
@@ -207,26 +224,80 @@ export default {
           });
         });
       }
+    },
+    upload() {
+      this.centerDialogVisible=true
+    },
+    uploadFile(param) {
+      console.log(param.file)
+      console.log(param)
+      this.fileList.push(param.file)
+    },
+    cencelUploadFile(param) {
+      this.fileList=[]
+      param.file=''
+      this.centerDialogVisible=false
+    },
+    submitUploadFile() {
+      console.log(this.fileList[0])
+      let date = new Date()
+      console.log(date)
+      let msg = '1'
+      let fileReder = new FileReader()
+      fileReder.readAsDataURL(this.fileList[0])
+      let binaryStr
+      fileReder.onloadend = function(){
+        binaryStr = fileReder.result.toString();
+        console.log(binaryStr)
+      }
+      //console.log(file)
+      let form = new FormData()
+      form.append('file', this.fileList[0])
+      form.append('date', date.toString())
+      form.append('msg', msg)
+      console.log(form)
+      //axios.post('http://47.118.35.129:8080/CloudDisk/upload', form)
+      axios({
+        url: 'http://47.118.35.129:8080/CloudDisk/upload',
+        data: form,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch()
     }
   }
 }
 </script>
 
 <style scoped>
-  .el-container {
-    padding: 3%;
-    flex-direction: column;
-  }
-  .el-divider {
-    height: 40px;
-    width: 2px;
-  }
-  .el-button {
-    width: 120px;
-  }
-  .right-button {
-     float: right;
-     margin: 5px;
-     width: 100px;
-   }
+.el-container {
+  padding: 3%;
+  flex-direction: column;
+}
+
+.el-divider {
+  height: 40px;
+  width: 2px;
+}
+
+.el-button {
+  width: 120px;
+}
+
+.right-button {
+  float: right;
+  margin: 5px;
+  width: 100px;
+}
+
+.el-dialog__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+}
 </style>

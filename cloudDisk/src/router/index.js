@@ -6,55 +6,54 @@ import Disk from "../views/Disk";
 import Center from "../views/Center";
 import Login from "../views/Login";
 import Info from "../views/Info";
-import Account from "../views/Account";
-import History from "../views/History";
-import Password from "../views/Password";
+import InfoAccount from "../components/InfoAccount";
+import InfoPassword from "../components/InfoPassword";
+import InfoHistory from "../components/InfoHistory";
 
 Vue.use(Router)
 
 export default new Router({
-	mode: 'history',
-	routes: [{
-		path: '/',
-		component: Main,
-		name: 'main',
-		redirect: '/home',
-		children: [{
-			path: '/home',
-			component: Home,
-			name: 'home'
-		}, {
-			path: '/disk',
-			component: Disk,
-			name: 'disk'
-		}, {
-			path: '/center',
-			component: Center,
-			name: 'center',
-			redirect: '/account',
-			children:[
-				{
-					path: '/account',
-					component: Account,
-					name: 'account'
-				}, {
-					path: '/history',
-					component: History,
-					name: 'history'
-				}, {
-					path: '/password',
-					component: Password,
-					name: 'password'
-				}
-			]
-		}, {
-			path: '/info',
-			component: Info,
-			name: 'info'
-		}, ]
-	}, {
-		path: '/login',
-		component: Login,
-		name: 'login'
-	}, ]
+    mode: 'history',
+    routes: [{
+        path: '/',
+        component: Main,
+        name: 'main',
+        redirect: '/home',
+        children: [{
+            path: '/home',
+            component: Home,
+            name: 'home'
+        },{
+            path: '/disk',
+            component: Disk,
+            name: 'disk'
+        },{
+            path: '/center',
+            component: Center,
+            name: 'center'
+        },{
+            path: '/info',
+            component: Info,
+            name: 'info',
+            redirect: '/infoAccount',
+            children: [{
+                path: '/infoAccount',
+                component: InfoAccount,
+                name: 'infoAccount'
+            },{
+                path: '/infoPassword',
+                component: InfoPassword,
+                name: 'infoPassword'
+            },{
+                path: '/infoHistory',
+                component: InfoHistory,
+                name: 'infoHistory'
+            }]
+        }]
+    },{
+        path: '/login',
+        component: Login,
+        name: 'login'
+    }]
 })
+

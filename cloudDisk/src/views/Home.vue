@@ -41,7 +41,7 @@ export default {
     height: 500px;
     width: 25%;
     margin-right: 10%;
-    opacity: 0.7
+    opacity: 0.8
   }
 
   .el-card:hover {

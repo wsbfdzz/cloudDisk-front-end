@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header style="height: auto">
       <NavMenu></NavMenu>
     </el-header>
     <el-main>
