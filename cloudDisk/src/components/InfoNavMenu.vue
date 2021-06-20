@@ -7,9 +7,9 @@
 		<el-menu-item index="infoPassword" :router=true>
 			<span slot="title">登陆密码</span>
 		</el-menu-item>
-		<el-menu-item index="infoHistory" :router=true>
+		<!-- <el-menu-item index="infoHistory" :router=true>
 			<span slot="title">操作记录</span>
-		</el-menu-item>
+		</el-menu-item> -->
 	</el-menu>
 </template>
 
@@ -19,7 +19,6 @@
 		data() {
 			return {
 				activeIndex: 'account',
-				circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
 			};
 		},
 		methods: {

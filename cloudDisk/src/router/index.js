@@ -8,12 +8,11 @@ import Login from "../views/Login";
 import Info from "../views/Info";
 import InfoAccount from "../components/InfoAccount";
 import InfoPassword from "../components/InfoPassword";
-import InfoHistory from "../components/InfoHistory";
 
 Vue.use(Router)
 
 export default new Router({
-    mode: 'history',
+    // mode: 'history',
     routes: [{
         path: '/',
         component: Main,
@@ -44,11 +43,13 @@ export default new Router({
                 path: '/infoPassword',
                 component: InfoPassword,
                 name: 'infoPassword'
-            },{
-                path: '/infoHistory',
-                component: InfoHistory,
-                name: 'infoHistory'
-            }]
+            }
+            //     , {
+            //     path: '/infoHistory',
+            //     component: InfoHistory,
+            //     name: 'infoHistory'
+            // }
+            ]
         }]
     },{
         path: '/login',

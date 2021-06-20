@@ -40,23 +40,26 @@ export default {
     },
 
     onSubmit(){
-      axios.post('/modify',{
-        type: 'password',
-        value: this.newpassword
-      })
-          .then(response =>(
-              this.$alert('修改成功!','修改成功'),
-                  this.state = response.data.status
-          ))
+      axios({
+        url:'modify',
+        method:'post',
+        params:{
+          type: 'password',
+          value: this.newpassword
+        }
+      }).then(() =>{
+            alert('修改成功!');
+            location.reload();
+          })
           .catch(function (error) { // 请求失败处理
-            window.alert('读取失败!');
+            alert('读取失败!');
             console.log(error);
           })
     }
   },
   mounted() {
     axios
-        .get('/checklogin')
+        .get('checklogin')
         .then(response => (
             this.password = response.data.msg.passwd
         ))

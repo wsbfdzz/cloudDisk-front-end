@@ -34,7 +34,7 @@ export default {
   },
   mounted() {
     axios
-        .post('/getFileList')
+        .post('getFileList')
         .then(response => (
             this.history=response.data.msg
         ))

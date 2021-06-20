@@ -4,57 +4,31 @@
       <info-nav-menu @func="switchTable"></info-nav-menu>
     </el-col>
     <el-col :span="21">
-      <router-view></router-view>
+      <router-view :user="user"></router-view>
     </el-col>
   </el-row>
 </template>
 
 <script>
 import InfoNavMenu from "../components/InfoNavMenu.vue"
-import axios from "axios";
 export default {
   name: "Info",
   components: {
     InfoNavMenu
   },
-  data() {
-    return {
-      imageUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-      stat: null,
-      username: null
+  props:{
+    user:{
+      type:Object,
+      default:function(){
+        return {uuid:"",usrName:"",}
+      }
     }
   },
   methods: {
     switchTable(key) {
       this.table = key
     },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      axios.post('/upavatar',{
-        file: file
-      }).then(function (response) {
-        if (response.data.status==='success'){
-          this.$alert('上传成功!');
-        }else{
-          window.alert('上传失败!');
-        }
-      }).catch(function (error) {
-        console.log(error);
-        window.alert('上传失败!');
-      });
-      // return isJPG && isLt2M;
-    }
+    
   },
   mounted() {
 
@@ -63,7 +37,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("//unpkg.com/element-plus/lib/theme-chalk/index.css");
+/* @import url("//unpkg.com/element-plus/lib/theme-chalk/index.css"); */
 
 .el-col {
   flex: 1;

@@ -1,21 +1,44 @@
 <template>
   <el-container>
     <el-header style="height: auto">
-      <NavMenu></NavMenu>
+      <NavMenu :isLogin="isLogin" :user="user"></NavMenu>
     </el-header>
     <el-main>
-      <router-view />
+      <router-view :user="user"/>
     </el-main>
   </el-container>
 </template>
 
 <script>
 import NavMenu from "../components/NavMenu";
+import axios from 'axios'
+
 export default {
   name: "Main",
   components: {
     NavMenu
-  }
+  },
+  data() {
+    return {
+      isLogin:false,
+      user:{
+        uuid:"",
+        usrName:"",
+      }
+    }
+  },
+  mounted() {
+    var vue = this;
+    axios.get("checklogin").then(function(res){
+                      var data = res.data;
+                      if(data.status=="success"){
+                          vue.isLogin = true;
+                          vue.user = data.msg;
+                      }
+                  }).catch(function(err){
+                    console.log(err);
+                  })
+  },
 }
 </script>
 

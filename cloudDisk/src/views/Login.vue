@@ -50,7 +50,7 @@ export default {
           message: '请输入用户名',
           trigger: 'blur'
         }, {
-            min: 6,
+            min: 1,
             max: 12,
             message: '非法长度',
             trigger: 'blur'
@@ -64,7 +64,7 @@ export default {
           message: '请输入密码',
           trigger: 'blur'
         }, {
-            min: 6,
+            min: 1,
             max: 20,
             message: '非法长度',
             trigger: 'blur'
@@ -78,15 +78,24 @@ export default {
   },
   methods: {
     Register(formName) {
+      var vue = this;
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log(this.form.username)
           console.log(this.form.password)
-          axios.post('#', {
-            username: this.form.username,
-            secret: this.form.password
+          axios.post('signup', {
+            name: this.form.username,
+            password: this.form.password
           }).then(function(response) {
-            console.log(response)
+            var data = response.data;
+            if(data.status=="fail"){
+              alert(data.msg);
+            }
+            else if(data.status=="success"){
+              alert("注册成功！");
+              vue.$router.push('/disk');
+              location.reload();
+            }
           }).catch(function(error) {
             console.log(error)
           });
@@ -94,27 +103,35 @@ export default {
           console.log('error')
         }
       });
-      this.$router.push('/disk')
+      // this.$router.push('/disk')
     },
     Login(formName) {
+      var vue = this;
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log(this.form.username)
           console.log(this.form.password)
-          axios.post('#', {
-            username: this.form.username,
-            secret: this.form.password
+          axios.post('login', {
+            name: this.form.username,
+            password: this.form.password
           }).then(function(response) {
-            console.log(response);
+            var data = response.data;
+            if(data.status=="fail"){
+              alert(data.msg);
+            }
+            else if(data.status=="success"){
+              alert("登录成功！");
+              vue.$router.push('/disk');
+              location.reload();
+            }
           }).catch(function(error) {
             console.log(error);
           });
-          this.$router.push('/')
+          // this.$router.push('/')
         } else {
           console.log('error')
         }
       });
-      this.$router.push('/disk')
     }
   }
 }

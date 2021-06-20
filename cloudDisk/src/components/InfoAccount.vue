@@ -24,10 +24,12 @@
     <el-col :span="8" style="flex: 1">
         <el-container>
           <el-card align="center">
-            <el-upload class="avatar-uploader" action="#" :show-file-list="false"
-                       :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+            <el-upload class="avatar-uploader" action="upavatar" :show-file-list="false"
+                       accept="image/jpeg,image/gif,image/png,image/jpg" multiple :limit="1" :on-success="upSuccess" :on-error="upError">
+                       <!-- :before-upload="beforeAvatarUpload" -->
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <div slot="tip" class="el-upload__tip">请上传图片格式文件</div>
             </el-upload>
           </el-card>
         </el-container>
@@ -49,20 +51,25 @@ import axios from "axios";
 
 export default ({
   name: "InfoAccount",
-  data() {
-    return {
-      uid: 12345,
-      username: "zxypro",
-      state: null,
-      newusrname: null,
-      imageUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-      stat: null
+  props:{
+    user:{
+      type:Object,
+      default:function(){
+        return {uuid:"",usrName:"",}
+      }
     }
   },
+  data() {
+    return {
+      newusrname: null
+    }
+  },
+  computed:{
+    uid(){return this.user.uuid},
+    username(){return this.user.usrName},
+    imageUrl(){return 'avatar?user=' + this.user.usrName}, 
+  },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -73,7 +80,7 @@ export default ({
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      axios.post('/upavatar',{
+      axios.post('upavatar',{
         file: file
       }).then(function (response) {
         if (response.data.status==='success'){
@@ -86,6 +93,31 @@ export default ({
         window.alert('上传失败!');
       });
       // return isJPG && isLt2M;
+    },
+    upSuccess(){
+      alert('上传成功');
+      location.reload();
+    },
+    upError(){
+      alert('上传失败');
+    },
+    onSubmit(){
+      axios({
+          url:"modify",
+          method:"post",
+          params:{
+            type:'username',
+            value:this.newusrname
+          }
+      }).then(function(res){
+            var data = res.data;
+            if(data.status=="success"){
+              alert("修改成功！");
+              location.reload();
+            }
+        }).catch(function(err){
+        console.log(err);
+        });
     }
   }
 })
