@@ -7,8 +7,8 @@
             <el-table-column label="UID" prop="uuid"></el-table-column>
             <el-table-column label="Name" prop="usrName"></el-table-column>
             <el-table-column label="Permission" prop="auth"></el-table-column>
-            <el-table-column label="Password" prop="password"></el-table-column>
-            <el-table-column label="Session Status" prop="status"></el-table-column>
+            <!-- <el-table-column label="Password" prop="password"></el-table-column> -->
+            <!-- <el-table-column label="Session Status" prop="status"></el-table-column> -->
             <el-table-column label="Manage">
               <template slot-scope="scope">
                 <el-button type="success" @click="handlePromote(scope.$index, scope.row)">Promote</el-button>
@@ -36,16 +36,17 @@
 </template>
 
 <script>
-import ManageTableData from '../assets/testJson/ManageTableData.json'
+// import ManageTableData from '../assets/testJson/ManageTableData.json'
+import axios from 'axios'
 export default {
   name: "Manage",
   data() {
     return {
-      tableData: ManageTableData.data,
+      tableData: [],
       //渲染的表单数据
 
       form: {
-        text: '消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播消息广播'
+        text: ''
       }
       //渲染的消息广播
     }
@@ -59,19 +60,92 @@ export default {
           confirmButtonText: 'yes'
         });
       } else {
-        console.log('提升权限等级的接口');
+        var vue = this;
+        axios({
+          url:"auth",
+          method:"post",
+          params:{
+            user:row.uuid
+          }
+        }).then(function(res){
+              var data = res.data;
+              if(data.status=="success"){
+                vue.$alert("操作成功！");
+                vue.getUserList();
+              }
+              else if(data.status=="fail"){
+                vue.$alert(data.msg);
+              }
+          }).catch(function(err){
+          console.log(err);
+          });
       }
     },
     handleDelete(index, row) {
       console.log(index, row);
-      console.log('删除用户的接口');
+      var vue = this;
+        axios({
+          url:"deleteUser",
+          method:"post",
+          params:{
+            user:row.uuid
+          }
+        }).then(function(res){
+              var data = res.data;
+              if(data.status=="success"){
+                vue.$alert("操作成功！");
+                vue.getUserList();
+              }
+              else if(data.status=="fail"){
+                vue.$alert(data.msg);
+              }
+          }).catch(function(err){
+          console.log(err);
+          });
     },
     submitForm() {
       console.log(this.form.text);
-      this.$alert('submit');
-      console.log('消息广播的接口');
+      var vue = this;
+      axios({
+        url:"broadcast",
+        method:"post",
+        params:{
+          msg:this.form.text
+        }
+      }).then(function(res){
+            var data = res.data;
+            if(data.status=="success"){
+              this.$alert("发送成功！");
+              vue.getUserList();
+            }
+            else if(data.status=="fail"){
+                vue.$alert(data.msg);
+              }
+        }).catch(function(err){
+          console.log(err);
+        });
+    },
+    getUserList(){
+      var vue = this;
+      axios({
+          url:"getUserList",
+          method:"get"
+      }).then(function(res){
+            var data = res.data;
+            if(data.status=="success"){
+              vue.tableData = data.msg;
+            }
+            else if(data.status=="fail"){
+                vue.$alert(data.msg);
+              }
+        }).catch(function(err){
+        console.log(err);
+        });
     }
-  }
+  },
+  mounted() {
+    this.getUserList();
+  },
 }
 </script>
 

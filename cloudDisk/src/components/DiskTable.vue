@@ -2,6 +2,7 @@
   <el-container>
     <el-card>
       <div slot="header">
+        <el-button round type="info" @click="goBack" v-if="!isBin">Upper Dir</el-button>
         <el-button round type="primary" @click="upload" v-if="!isBin">Upload</el-button>
         <el-dialog :visible.sync="centerDialogVisible" center title="提示" width="auto">
           <el-upload class="upload-demo" :limit="1" drag action="#" multiple :http-request="uploadFile" :on-remove="cencelUploadFile">
@@ -23,14 +24,14 @@
         <el-button class="right-button" type="warning" @click="renameFile" v-if="!isBin">Rename</el-button>
         <el-button class="right-button" type="info" @click="moveSelectFlush=!moveSelectFlush;moveFile()" v-if="!isBin">Move</el-button>
         <button ref="dirSelect" data-toggle="modal" data-target="#dir-select" v-show="false"></button>
-        <dir-select :itemList="tableData" :isFlush="moveSelectFlush" @move="moveReq"/>
+        <dir-select :itemList="tableData" :isFlush="moveSelectFlush" :select="selectData" @move="moveReq"/>
       </div>
       <div>
         <el-page-header v-if="enterFolder" :content="folder" title="Back" @back="goBack">
         </el-page-header>
         <el-table :data="tableData" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" height="450px"
                   row-key="id"
-                  style="width: 100%" @select="selectFile" @selection-change="handleSelectionChange" @click="dirEnter(scope.$index)">
+                  style="width: 100%" @select="selectFile" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50"></el-table-column>
           <el-table-column label="Name" prop="name" width="150">
             <template slot-scope="scope">
@@ -40,6 +41,7 @@
           <el-table-column label="Type" prop="type" width="150"></el-table-column>
           <el-table-column label="Date" prop="date" width="150"></el-table-column>
           <el-table-column label="Size" prop="size" width="150"></el-table-column>
+          <el-table-column label="Uploader" prop="usr" width="150" v-if="isAdmin"></el-table-column>
           <el-table-column label="Info" prop="msg"></el-table-column>
         </el-table>
       </div>
@@ -83,6 +85,7 @@ export default {
       isBin:false,
       curFolder:0,
       moveSelectFlush:false,
+      history:[],
 
       extCompare:[['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'psd', 'svg', 'tiff'],
                   ['doc','docx','pdf'],
@@ -92,6 +95,9 @@ export default {
   },
   props: ['table'],
   computed:{
+    isAdmin:function(){
+      return this.user.auth==='admin';
+    },
     picList:function(){
       return this.DiskTableData.filter((item)=>{
           var tokens =  item.name.split(".");
@@ -150,32 +156,21 @@ export default {
         this.isBin = true;
         this.tableData = this.binList;
       }
-    }
+    },
   },
   methods: {
     goBack() {
-      console.log('go back');
+      if(this.history.length==1) return;
+      this.history.pop();
+      this.curFolder = this.history[this.history.length-1];
+      this.getFileList(this.curFolder);
     },
     dirEnter(val) {
       var item = this.tableData[val]
-      var vue = this;
       if(item.type === 'dir'){
-        axios({
-          url: 'getFileList',
-          params: {
-            path: item.no
-          },
-          method: 'post',
-        })
-        .then(function(response) {
-          var data = response.data;
-          if(data.status=="success"){
-              vue.DiskTableData = data.msg;
-              vue.tableData = data.msg;
-              vue.curFolder = item.no;
-          }
-        })
-        .catch()
+        this.getFileList(item.no);
+        this.history.push(item.no);
+        this.curFolder=item.no;
       }
     },
     toggleSelection(rows) {
@@ -199,8 +194,8 @@ export default {
     },
     deleteFiles() {
       if (this.selectData.length !== 0) {
-        var url = this.isBin?"delete":"bin";
         var vue = this;
+        var url = this.isBin?"delete":"bin";
         for (let i in this.selectData) {
           axios({
             url: url,
@@ -213,7 +208,9 @@ export default {
           .then(function(response) {
             var data = response.data;
             if(data.status=="success"){
-              vue.getFileList(vue.curFolder);
+              if(!vue.isBin)
+                vue.getFileList(vue.curFolder);
+              vue.getFileList(-1);
             }
             else if(data.status=="fail")
               alert(data.msg);
@@ -222,19 +219,6 @@ export default {
         }
       }
     },
-    // downloadFiles() {
-    //   if (this.selectData.length !== 0) {
-    //     for (let i in this.selectData) {
-    //       if(this.selectData[i].type === 'file')
-    //         location.href=`download?no=${this.selectData[i].no}`;
-    //         var start = new Date().getTime();
-    //         //休眠50ms
-    //         var start = new Date().getTime();
-    //         var time = start;
-    //         while (time - start < 50) {time = new Date().getTime()}
-    //     }
-    //   }
-    // },
     openBox(filesID, msg) {
       this.$confirm(msg, 'warning', {
         confirmButtonText: 'yes',
@@ -316,8 +300,6 @@ export default {
             console.log(error)
           });
       }
-      
-      console.log(val);
 
     },
     renameFile() {
@@ -372,8 +354,6 @@ export default {
       this.centerDialogVisible=true
     },
     uploadFile(param) {
-      console.log(param.file)
-      console.log(param)
       this.fileList.push(param.file)
     },
     cencelUploadFile(param) {
@@ -433,9 +413,17 @@ export default {
       .then(function(response) {
         var data = response.data;
         if(data.status=="success"){
+          if(val >= 0){
             vue.DiskTableData = data.msg;
             vue.tableData = data.msg;
-            vue.curFolder = vue.user.dirNo;
+            vue.curFolder = val;
+          }
+          else{
+            vue.binList = data.msg;
+            if(vue.isBin){
+                vue.tableData = data.msg;
+              }
+          }
         }
       })
       .catch()
@@ -449,6 +437,7 @@ export default {
                   vue.user = data.msg;
                   //获取文件列表
                   vue.getFileList(vue.user.dirNo);
+                  vue.history.push(vue.user.dirNo);
               }
           }).catch(function(err){
             console.log(err);

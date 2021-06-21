@@ -4,12 +4,13 @@
     <el-menu-item index="home" :router=true>Home</el-menu-item>
     <el-menu-item index="disk" :router=true v-if="isLogin">Disk</el-menu-item>
     <el-menu-item index="center" :router=true v-if="isLogin">Center</el-menu-item>
+    <el-menu-item index="manage" :router=true v-if="isLogin&&(user.auth==='admin')">Manage</el-menu-item>
     <el-dropdown class="icon_memu" index="5" @command="handleCommand">
 
       <el-avatar :size="40" :src="circleUrl"></el-avatar>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="login" v-if="!isLogin">Login</el-dropdown-item>
-        <el-dropdown-item command="info">Info</el-dropdown-item>
+        <el-dropdown-item command="info" :disabled="!isLogin">Info</el-dropdown-item>
         <el-dropdown-item command="logout" :disabled="!isLogin" @click.native="exit">logout</el-dropdown-item>
       </el-dropdown-menu>
 

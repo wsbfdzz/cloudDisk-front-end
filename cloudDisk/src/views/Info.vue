@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style scoped>
-/* @import url("//unpkg.com/element-plus/lib/theme-chalk/index.css"); */
+@import url("//unpkg.com/element-plus/lib/theme-chalk/index.css");
 
 .el-col {
   flex: 1;

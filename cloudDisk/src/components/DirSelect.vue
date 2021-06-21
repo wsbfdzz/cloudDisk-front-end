@@ -41,12 +41,19 @@ export default {
             default:function(){
                 return [];
             }
+        },
+        select:{
+            type:Array,
+            default:function(){
+                return [];
+            }
         }
     },
     watch:{
         isFlush:function(){
             this.isSelect = false;
-            this.dirList = this.itemList.filter((item)=>{return item.type==='dir'})
+            var vue = this;
+            this.dirList = this.itemList.filter((item)=>{return (item.type==='dir')&&(vue.select[0].no!=item.no)})
         },
     },
     data() {

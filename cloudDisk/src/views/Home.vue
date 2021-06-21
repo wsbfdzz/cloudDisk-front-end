@@ -7,8 +7,12 @@
         </span>
       </div>
       <div>
-        <span>
+        <span style="font-family: Arial, Helvetica, sans-serif;">
           项目介绍
+          <br/>
+          &nbsp;&nbsp;XDU Cloud Disk
+          <br/>
+          &nbsp;&nbsp;采用Mysql作为数据库；后端使用Springboot框架进行开发；前端采用Vue、element-ui以及bootstrap框架进行开发。具备基础的云盘功能以及社交好友系统。
         </span>
       </div>
     </el-card>

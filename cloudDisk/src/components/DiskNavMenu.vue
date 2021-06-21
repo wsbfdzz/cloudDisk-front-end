@@ -25,7 +25,7 @@
       <i class="el-icon-folder-opened"></i>
       <span slot="title">Other</span>
     </el-menu-item>
-    <el-menu-item index="Trash">
+    <el-menu-item index="Trash" v-if="!isAdmin">
       <i class="el-icon-delete-solid"></i>
       <span slot="title">Trash</span>
     </el-menu-item>
@@ -33,8 +33,14 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: "DiskNavMenu",
+  data() {
+    return {
+      isAdmin:false
+    }
+  },
   methods: {
     jumpToTable(){
       this.$emit('func',this.msg)
@@ -47,8 +53,19 @@ export default {
     },
     handleCommand(command) {
       this.$router.push({name: command})
-    }
-  }
+    },
+  },
+  mounted() {
+    var vue = this;
+    axios.get("checklogin").then(function(res){
+              var data = res.data;
+              if(data.status=="success"){
+                  vue.isAdmin = (data.msg.auth==='admin')
+              }
+          }).catch(function(err){
+            console.log(err);
+          })
+  },
 }
 </script>
 
